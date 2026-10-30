@@ -124,7 +124,7 @@ def determine_RMSF_parameters(freq_array,weights_array,phi_max,dphi,RMSF_filenam
 
     phi_array=np.arange(-1*phi_max/2,phi_max/2+1e-6,dphi) #division by two accounts for how RMSF is always twice as wide as FDF.
 
-    RMSFcube, phi2Arr, fwhmRMSFArr, statArr=get_rmsf_planes(
+    rmsf_results = get_rmsf_planes(
         lambda2_array,
         phi_array,
         weightArr=weights_array,
@@ -132,6 +132,16 @@ def determine_RMSF_parameters(freq_array,weights_array,phi_max,dphi,RMSF_filenam
         fitRMSFreal=super_resolution,
         lam0Sq_m2=0 if super_resolution else None,
     )
+    #print(rmsf_results)
+    
+    #RMSFcube, phi2Arr, fwhmRMSFArr, statArr=get_rmsf_planes(
+    #    lambda2_array,
+    #    phi_array,
+    #    weightArr=weights_array,
+    #    fitRMSF=True,
+    #    fitRMSFreal=super_resolution,
+    #    lam0Sq_m2=0 if super_resolution else None,
+    #)
 
 
     #Output key results to terminal:
@@ -156,7 +166,7 @@ def determine_RMSF_parameters(freq_array,weights_array,phi_max,dphi,RMSF_filenam
 
     
     # Writing out RMSF file
-    data_out = np.column_stack((phi2Arr, abs(RMSFcube)))
+    data_out = np.column_stack((rmsf_results[1], abs(rmsf_results[0])))
     np.savetxt(RMSF_filename+'.txt', data_out, delimiter=' ', fmt='%f')
     
     # Writing out parameters file
